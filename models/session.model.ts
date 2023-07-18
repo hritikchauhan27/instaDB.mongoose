@@ -8,8 +8,6 @@ interface Session {
     device_id: number;
     device_token: string;
     device_type: string;
-    createdAt: Date;
-    updatedAt: Date;
   }
 
 const SessionSchema = new Schema<Session>({
@@ -18,9 +16,7 @@ const SessionSchema = new Schema<Session>({
   device_id: { type: Number, required: true },
   device_token: { type: String, required: true },
   device_type: { type: String, required: true },
-  createdAt: { type: Date, required: true },
-  updatedAt: { type: Date, required: true },
 });
 
-const SessionModel = model<Session>('Session', SessionSchema);
-export default SessionModel;
+export const SessionModel = model<Session>('Session', SessionSchema);
+// export default SessionModel;
