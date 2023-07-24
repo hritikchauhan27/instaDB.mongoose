@@ -28,4 +28,17 @@ export class Redis{
             console.log(err);
         }
     }
+    static async logout_session_redis(user){
+        try{
+            await client.SET(user.username, JSON.stringify({
+                user_id: user.id,
+                status: false
+            }));
+            const session = await client.get(user.username);
+            console.log(session);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
 }

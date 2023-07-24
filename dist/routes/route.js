@@ -8,7 +8,6 @@ const express_1 = __importDefault(require("express"));
 const signup_controller_1 = require("../controllers/signup.controller");
 const count_controller_1 = require("../controllers/count.controller");
 const login_controller_1 = require("../controllers/login.controller");
-const auth_1 = require("../middleware/auth");
 const logout_controller_1 = require("../controllers/logout.controller");
 const router = express_1.default.Router();
 exports.router = router;
@@ -100,5 +99,5 @@ router.get('/logout', logout_controller_1.Logout.logout_user);
 //   responses:
 //     '200':
 //       description: Update successful.
-router.get('/followRequest', auth_1.authenticateToken, count_controller_1.update_follower);
+router.get('/followRequest', count_controller_1.update_follower);
 //# sourceMappingURL=route.js.map

@@ -36,6 +36,21 @@ class Redis {
             }
         });
     }
+    static logout_session_redis(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield client.SET(user.username, JSON.stringify({
+                    user_id: user.id,
+                    status: false
+                }));
+                const session = yield client.get(user.username);
+                console.log(session);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        });
+    }
 }
 exports.Redis = Redis;
 //# sourceMappingURL=session.redis.js.map

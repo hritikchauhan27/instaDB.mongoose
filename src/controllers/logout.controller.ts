@@ -8,15 +8,16 @@ import { Verify } from "../middleware/auth.user";
 export class Logout{
     static async logout_user(req: any, res:any){
         try{
-            const user = await Verify.verify_token(req.headers.authorization);
-            const isUser = await UserModel.find({email: user.email});
-            console.log(isUser)
-            if(isUser){
-                const id = isUser[0]._id;
-                const isSession = await SessionModel.find({user_id: id});
-                if(isSession){
-                    if(isSession[0].status){
-                        await SessionModel.findOneAndUpdate({_id: isSession[0]._id}, {status: !isSession[0].status});
+            const userToken = await Verify.verify_token(req.headers.authorization);
+            const user = await UserModel.findOne({email: userToken.email});
+            console.log(user)
+            if(user){
+                const id = user.id;
+                const userSession = await SessionModel.findOne({user_id: id});
+                if(userSession){
+                    if(userSession.status){
+                        Redis.logout_session_redis(userSession);
+                        await SessionModel.findOneAndUpdate({_id: userSession.id}, {status: userSession.status});
                         res.status(201).json({message: "User logOut Successfully"});
                     }
                     else{
@@ -36,4 +37,5 @@ export class Logout{
             res.status(500).json({message: "Server Error"});
         }
     }
+    
 }

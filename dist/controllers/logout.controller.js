@@ -11,21 +11,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Logout = void 0;
 const user_model_1 = require("../models/user.model");
+const session_redis_1 = require("../middleware/session.redis");
 const session_model_1 = require("../models/session.model");
 const auth_user_1 = require("../middleware/auth.user");
 class Logout {
     static logout_user(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield auth_user_1.Verify.verify_token(req.headers.authorization);
-                const isUser = yield user_model_1.UserModel.find({ email: user.email });
-                console.log(isUser);
-                if (isUser) {
-                    const id = isUser[0]._id;
-                    const isSession = yield session_model_1.SessionModel.find({ user_id: id });
-                    if (isSession) {
-                        if (isSession[0].status) {
-                            yield session_model_1.SessionModel.findOneAndUpdate({ _id: isSession[0]._id }, { status: !isSession[0].status });
+                const userToken = yield auth_user_1.Verify.verify_token(req.headers.authorization);
+                const user = yield user_model_1.UserModel.findOne({ email: userToken.email });
+                console.log(user);
+                if (user) {
+                    const id = user.id;
+                    const userSession = yield session_model_1.SessionModel.findOne({ user_id: id });
+                    if (userSession) {
+                        if (userSession.status) {
+                            session_redis_1.Redis.logout_session_redis(userSession);
+                            yield session_model_1.SessionModel.findOneAndUpdate({ _id: userSession.id }, { status: userSession.status });
                             res.status(201).json({ message: "User logOut Successfully" });
                         }
                         else {
