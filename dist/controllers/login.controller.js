@@ -27,6 +27,7 @@ class LoginUser {
         return __awaiter(this, void 0, void 0, function* () {
             const details = req.body;
             try {
+                const device = req.headers.device;
                 yield auth_user_1.Verify.verify_login_details.validateAsync(details);
                 const user = yield user_model_1.UserModel.findOne({ email: details.email });
                 console.log(user);
@@ -37,8 +38,8 @@ class LoginUser {
                         const hash = user.password;
                         if (bcrypt_1.default.compare(details.password, hash)) {
                             const token = jsonwebtoken_1.default.sign({ email: details.email }, process.env.SECRET_KEY, { expiresIn: '2d' });
-                            yield session_controller_1.Sessions.maintain_session(req, res, user, userSession);
-                            yield session_redis_1.Redis.maintain_session_redis(user);
+                            yield session_controller_1.Sessions.maintain_session(req, res, device, user, userSession);
+                            yield session_redis_1.Redis.maintain_session_redis(user, device);
                             res.status(201).json({ message: "login successfully", isUser: user, token });
                             console.log(token);
                         }

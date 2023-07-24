@@ -8,7 +8,9 @@
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.4",
-    "redis": "^4.6.7"
+    "redis": "^4.6.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "name": "insta.demo",
   "version": "1.0.0",

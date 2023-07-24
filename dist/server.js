@@ -29,13 +29,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const route_1 = require("./routes/route");
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const connection_1 = require("./core/connection");
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: "Instagram",
+            version: "1.0.0"
+        },
+        servers: [
+            {
+                url: "http://localhost:3000/"
+            }
+        ]
+    },
+    apis: ['./src/swagger/*'],
+};
 const app = (0, express_1.default)();
 dotenv.config();
 const port = process.env.PORT;
 app.use(express_1.default.json());
 (0, connection_1.connectToDatabase)();
 app.use('/', route_1.router);
+const swaggerDocument = (0, swagger_jsdoc_1.default)(options);
+app.use('/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
 app.listen(port, () => {
     console.log(`listning at http://locahost:${port}`);
 });

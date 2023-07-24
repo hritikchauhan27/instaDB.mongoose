@@ -13,6 +13,7 @@ export class LoginUser{
     static async user_login(req,res){
         const details = req.body;
         try{
+          const device =req.headers.device;
             await Verify.verify_login_details.validateAsync(details);
             const user = await UserModel.findOne({email:details.email});
             console.log(user);
@@ -23,8 +24,8 @@ export class LoginUser{
                     const hash = user.password;
                     if(bcrypt.compare(details.password, hash)){
                         const token = jwt.sign({email: details.email}, process.env.SECRET_KEY, {expiresIn: '2d'} );
-                        await Sessions.maintain_session(req,res, user,userSession); 
-                        await Redis.maintain_session_redis(user);
+                        await Sessions.maintain_session(req,res,device, user,userSession); 
+                        await Redis.maintain_session_redis(user, device);
                         res.status(201).json({message: "login successfully", isUser: user, token});
                         console.log(token);
                         

@@ -7,13 +7,14 @@ import { Verify } from "./auth.user";
 const client = createClient();
 
 export class Redis{
-    static async maintain_session_redis(user){
+    static async maintain_session_redis(user,device){
         await client.connect();
         client.on('error', err => console.log('Redis client error', err));
         try{
             if(user){
                 await client.SET(user.username, JSON.stringify({
                     'user_id': user._id,
+                    'device_id': device,
                     'status': true
                 }));
                 const session = await client.get(user.username);

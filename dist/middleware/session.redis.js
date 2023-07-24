@@ -13,7 +13,7 @@ exports.Redis = void 0;
 const redis_1 = require("redis");
 const client = (0, redis_1.createClient)();
 class Redis {
-    static maintain_session_redis(user) {
+    static maintain_session_redis(user, device) {
         return __awaiter(this, void 0, void 0, function* () {
             yield client.connect();
             client.on('error', err => console.log('Redis client error', err));
@@ -21,6 +21,7 @@ class Redis {
                 if (user) {
                     yield client.SET(user.username, JSON.stringify({
                         'user_id': user._id,
+                        'device_id': device,
                         'status': true
                     }));
                     const session = yield client.get(user.username);

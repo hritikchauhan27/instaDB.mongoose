@@ -12,13 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Sessions = void 0;
 const session_model_1 = require("../models/session.model");
 class Sessions {
-    static maintain_session(req, res, user, userSession) {
+    static maintain_session(req, res, device, user, userSession) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (user) {
                     if (!userSession) {
                         const session_details = new session_model_1.SessionModel({
                             user_id: user.id,
+                            device_id: device,
                             status: true
                         });
                         const session = yield session_details.save();
