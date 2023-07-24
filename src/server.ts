@@ -6,20 +6,21 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { connectToDatabase } from "./core/connection";
 
-const options = {
+const options:swaggerJSDoc.options = {
     definition: {
         openapi: '3.0.0',
         info: {
             title: "Instagram",
             version: "1.0.0"
         },
+        schemas:['http', 'https'],
         servers: [
-            {
-                url: "http://localhost:3000/"
-            }
+        {
+            url: "http://localhost:3000/"
+        }
         ]
     },
-    apis: ['./src/swagger/*'],
+    apis: ['./src/swagger/user.servicedoc.yaml'],
 };
 
 

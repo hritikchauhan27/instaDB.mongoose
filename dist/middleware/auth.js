@@ -38,10 +38,9 @@ const authenticateToken = (req, res, next) => {
         console.log(authHeader);
         jsonwebtoken_1.default.verify(token, SECRET_KEY, (err, user) => {
             if (err) {
-                console.log(" --------------");
                 return res.sendStatus(403);
             }
-            console.log(user);
+            // console.log(user);
             req.user = user;
             next();
         });

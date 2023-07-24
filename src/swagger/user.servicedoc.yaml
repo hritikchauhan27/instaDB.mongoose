@@ -7,12 +7,31 @@ components:
       properties:
         username:
           type: string
+          example: Hritik123
+        first_name:
+          type: string
           example: Hritik
+        last_name:
+          type: string
+          example: Chauhan    
         email:
           type: string
           example: abc@gmail.com
+        follower_count:
+          type: number   
+          example: 14
+        following_count:
+          type: number   
+          example: 45
+        post_count:
+          type: number
+          example: 35  
         password:
-          type: string    
+          type: string   
+          example: "11345"
+        bio:
+          type: string
+          example: this is my bio 
       required:  
           username 
     name: Follower and Following count Section
@@ -47,7 +66,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user'
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string  
       responses:
         '200':
           description: Authorized.

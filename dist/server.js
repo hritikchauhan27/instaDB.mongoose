@@ -39,13 +39,14 @@ const options = {
             title: "Instagram",
             version: "1.0.0"
         },
+        schemas: ['http', 'https'],
         servers: [
             {
                 url: "http://localhost:3000/"
             }
         ]
     },
-    apis: ['./src/swagger/*'],
+    apis: ['./src/swagger/user.servicedoc.yaml'],
 };
 const app = (0, express_1.default)();
 dotenv.config();
