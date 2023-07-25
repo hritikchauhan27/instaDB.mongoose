@@ -13,9 +13,9 @@ const user_SignUp = async (req: any, res: any) => {
     const details = req.body;
     try {
         // await Validate.validateUser.validateAsync(details);
-        const isUser = await UserModel.find({ username: details.username });
-        console.log(isUser);
-        if (!isUser.length){
+        const user = await UserModel.findOne({ username: details.username });
+        console.log(user);
+        if (!user){
             const salt = await bcrypt.genSalt(10);
             const hashpassword = await bcrypt.hash(details.password, salt);
             // console.log(hashpassword);
@@ -35,7 +35,7 @@ const user_SignUp = async (req: any, res: any) => {
             console.log(Details);
         }
         else {
-            res.status(404).json({ message: "Username already exist" });
+            res.status(404).json({ message: "User already exist" });
         }
     }
     catch (err) {

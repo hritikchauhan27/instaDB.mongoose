@@ -28,11 +28,10 @@ class Sessions {
                     }
                     else if (userSession) {
                         if (!userSession.status) {
-                            yield session_model_1.SessionModel.findOneAndUpdate({ user_id: user }, { status: !userSession.status });
+                            yield session_model_1.SessionModel.findOneAndUpdate({ user_id: user.id }, { status: !userSession.status });
                             console.log("Session Activate");
                         }
                     }
-                    // await Redis.maintain_session_redis(token,user);
                 }
                 else {
                     // res.status(404).json({message: "User Not Found"});

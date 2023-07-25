@@ -6,6 +6,11 @@ import { Verify } from "../middleware/auth.user";
 import { Sessions } from "./session.controller";
 import { SessionModel } from "../models/session.model";
 import { Redis } from "../middleware/session.redis";
+import { createClient } from "redis";
+
+const redisClient = createClient();
+redisClient.connect();
+redisClient.on('error', err => console.log('Redis client error', err));
 
 dotenv.config();
 
@@ -24,11 +29,11 @@ export class LoginUser{
                     const hash = user.password;
                     if(bcrypt.compare(details.password, hash)){
                         const token = jwt.sign({email: details.email}, process.env.SECRET_KEY, {expiresIn: '2d'} );
+                        // console.log(token);
                         await Sessions.maintain_session(req,res,device, user,userSession); 
-                        await Redis.maintain_session_redis(user, device);
-                        res.status(201).json({message: "login successfully", isUser: user, token});
-                        console.log(token);
-                        
+                        // console.log(userSession);
+                        await Redis.maintain_session_redis(redisClient,user, device);
+                        res.status(201).json({message: "login successfully", user: user, token});  
                     }
                     else{
                         res.status(404).json({message: "password is incorrect"});

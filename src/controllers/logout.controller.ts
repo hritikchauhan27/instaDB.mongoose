@@ -1,9 +1,12 @@
 import {UserModel} from "../models/user.model";
 import { Redis } from "../middleware/session.redis";
-import { Sessions} from "./session.controller";
 import {SessionModel} from "../models/session.model";
-import { authenticateToken } from "../middleware/auth";
 import { Verify } from "../middleware/auth.user";
+import { createClient } from "redis";
+
+const redisClient = createClient();
+redisClient.connect();
+redisClient.on('error', err => console.log('Redis client error', err));
 
 export class Logout{
     static async logout_user(req: any, res:any){
@@ -14,10 +17,12 @@ export class Logout{
             if(user){
                 const id = user.id;
                 const userSession = await SessionModel.findOne({user_id: id});
-                if(userSession){
+                console.log(userSession);
+                if(user){
                     if(userSession.status){
-                        Redis.logout_session_redis(userSession);
-                        await SessionModel.findOneAndUpdate({_id: userSession.id}, {status: userSession.status});
+                        await Redis.logout_session_redis(redisClient,user);
+                        const updatedUserSession = await SessionModel.findOneAndUpdate({_id: userSession.id}, {status: !userSession.status});
+                        // console.log(updatedUserSession);
                         res.status(201).json({message: "User logOut Successfully"});
                     }
                     else{

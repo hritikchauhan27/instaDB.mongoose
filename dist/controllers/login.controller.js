@@ -21,6 +21,10 @@ const auth_user_1 = require("../middleware/auth.user");
 const session_controller_1 = require("./session.controller");
 const session_model_1 = require("../models/session.model");
 const session_redis_1 = require("../middleware/session.redis");
+const redis_1 = require("redis");
+const redisClient = (0, redis_1.createClient)();
+redisClient.connect();
+redisClient.on('error', err => console.log('Redis client error', err));
 dotenv_1.default.config();
 class LoginUser {
     static user_login(req, res) {
@@ -38,10 +42,11 @@ class LoginUser {
                         const hash = user.password;
                         if (bcrypt_1.default.compare(details.password, hash)) {
                             const token = jsonwebtoken_1.default.sign({ email: details.email }, process.env.SECRET_KEY, { expiresIn: '2d' });
+                            // console.log(token);
                             yield session_controller_1.Sessions.maintain_session(req, res, device, user, userSession);
-                            yield session_redis_1.Redis.maintain_session_redis(user, device);
-                            res.status(201).json({ message: "login successfully", isUser: user, token });
-                            console.log(token);
+                            // console.log(userSession);
+                            yield session_redis_1.Redis.maintain_session_redis(redisClient, user, device);
+                            res.status(201).json({ message: "login successfully", user: user, token });
                         }
                         else {
                             res.status(404).json({ message: "password is incorrect" });

@@ -1,44 +1,42 @@
-import redis from "redis";
 import { createClient } from "redis";
-import {UserModel} from "../models/user.model";
-import { authenticateToken } from "./auth";
-import { Verify } from "./auth.user";
+
 
 const client = createClient();
 
+client.connect();
+client.on('error', err => console.log('Redis client error', err));
+
 export class Redis{
-    static async maintain_session_redis(user,device){
-        await client.connect();
-        client.on('error', err => console.log('Redis client error', err));
+    static async maintain_session_redis(client,user,device){
         try{
             if(user){
-                await client.SET(user.username, JSON.stringify({
+                await client.set(user.username, JSON.stringify({
                     'user_id': user._id,
                     'device_id': device,
                     'status': true
                 }));
-                const session = await client.get(user.username);
-                console.log(session);
+                const redisSession = await client.get(user.username);
+                console.log(redisSession);
             }
             else{
                 console.log("User not found");
             }
         }
         catch(err){
-            console.log(err);
+            console.log("Redis not set successfully",err);
         }
     }
-    static async logout_session_redis(user){
+
+    static async logout_session_redis(client,user){
+        console.log(user.username);
         try{
-            await client.SET(user.username, JSON.stringify({
-                user_id: user.id,
-                status: false
-            }));
-            const session = await client.get(user.username);
-            console.log(session);
+            // console.log(user.username);
+            await client.del(user.username);
+            // const redisSessions = await client.get(user.username);
+            console.log("delete successfully");
         }
         catch(err){
-            console.log(err);
+            console.log("error in deleting",err);
         }
     }
 }

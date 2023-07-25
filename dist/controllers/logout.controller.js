@@ -14,6 +14,10 @@ const user_model_1 = require("../models/user.model");
 const session_redis_1 = require("../middleware/session.redis");
 const session_model_1 = require("../models/session.model");
 const auth_user_1 = require("../middleware/auth.user");
+const redis_1 = require("redis");
+const redisClient = (0, redis_1.createClient)();
+redisClient.connect();
+redisClient.on('error', err => console.log('Redis client error', err));
 class Logout {
     static logout_user(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -24,10 +28,12 @@ class Logout {
                 if (user) {
                     const id = user.id;
                     const userSession = yield session_model_1.SessionModel.findOne({ user_id: id });
-                    if (userSession) {
+                    console.log(userSession);
+                    if (user) {
                         if (userSession.status) {
-                            session_redis_1.Redis.logout_session_redis(userSession);
-                            yield session_model_1.SessionModel.findOneAndUpdate({ _id: userSession.id }, { status: userSession.status });
+                            yield session_redis_1.Redis.logout_session_redis(redisClient, user);
+                            const updatedUserSession = yield session_model_1.SessionModel.findOneAndUpdate({ _id: userSession.id }, { status: !userSession.status });
+                            console.log(updatedUserSession);
                             res.status(201).json({ message: "User logOut Successfully" });
                         }
                         else {
