@@ -99,6 +99,6 @@ router.get('/logout',Logout.logout_user);
 //       description: Update successful.
 
 router.get('/followRequest',authenticateToken, update_follower);
-router.post('/post',post);
+router.post('/post',authenticateToken, post);
 
 export  {router};
