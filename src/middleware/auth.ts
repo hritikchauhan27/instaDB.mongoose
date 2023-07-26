@@ -13,7 +13,7 @@ const authenticateToken = (req, res, next) => {
     
     jwt.verify(token, SECRET_KEY, (err, user) => {
       if (err) {
-        return res.sendStatus(403);
+        return res.sendStatus(403).json({message: "token is incorrect"});
       }
       // console.log(user);
       
@@ -21,7 +21,7 @@ const authenticateToken = (req, res, next) => {
       next();
     });
   } else {
-    res.sendStatus(401);
+    res.sendStatus(401).json({message: "header is empty"});
   }
 };
 

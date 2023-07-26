@@ -38,7 +38,7 @@ const authenticateToken = (req, res, next) => {
         console.log(authHeader);
         jsonwebtoken_1.default.verify(token, SECRET_KEY, (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                return res.sendStatus(403).json({ message: "token is incorrect" });
             }
             // console.log(user);
             req.user = user;
@@ -46,7 +46,7 @@ const authenticateToken = (req, res, next) => {
         });
     }
     else {
-        res.sendStatus(401);
+        res.sendStatus(401).json({ message: "header is empty" });
     }
 };
 exports.authenticateToken = authenticateToken;

@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostModel = void 0;
 const mongoose_1 = require("mongoose");
 const postSchema = new mongoose_1.Schema({
-    user_id: { type: Number, ref: 'User', required: true },
+    user_id: { type: String, ref: 'User', required: true },
     photo_url: { type: String, required: true },
     caption: { type: String, required: true },
 });

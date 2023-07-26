@@ -3,13 +3,13 @@
 import { Schema, model } from 'mongoose';
 
 interface Post {
-    user_id: number;
+    user_id: string;
     photo_url: string;
     caption: string;
 }
 
 const postSchema = new Schema<Post>({
-  user_id: { type: Number, ref: 'User', required: true },
+  user_id: { type: String, ref: 'User', required: true },
   photo_url: { type: String, required: true },
   caption: { type: String, required: true },
 });

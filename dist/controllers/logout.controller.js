@@ -33,7 +33,7 @@ class Logout {
                         if (userSession.status) {
                             yield session_redis_1.Redis.logout_session_redis(redisClient, user);
                             const updatedUserSession = yield session_model_1.SessionModel.findOneAndUpdate({ _id: userSession.id }, { status: !userSession.status });
-                            console.log(updatedUserSession);
+                            // console.log(updatedUserSession);
                             res.status(201).json({ message: "User logOut Successfully" });
                         }
                         else {

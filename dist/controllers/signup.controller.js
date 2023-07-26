@@ -23,9 +23,9 @@ const user_SignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const details = req.body;
     try {
         // await Validate.validateUser.validateAsync(details);
-        const isUser = yield user_model_1.UserModel.find({ username: details.username });
-        console.log(isUser);
-        if (!isUser.length) {
+        const user = yield user_model_1.UserModel.findOne({ username: details.username });
+        console.log(user);
+        if (!user) {
             const salt = yield bcrypt_1.default.genSalt(10);
             const hashpassword = yield bcrypt_1.default.hash(details.password, salt);
             // console.log(hashpassword);
@@ -45,7 +45,7 @@ const user_SignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             console.log(Details);
         }
         else {
-            res.status(404).json({ message: "Username already exist" });
+            res.status(404).json({ message: "User already exist" });
         }
     }
     catch (err) {
